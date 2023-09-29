@@ -1,0 +1,10 @@
+  METHOD update_periods_index_prices.
+
+**Populate Maturity Key date, start-end period for all 5 period types
+    ct_periods = VALUE #( ( dcsid = iv_dcsid  keydate = iv_date periodtype = cl_tba_dcs_lof_services=>gc_periodtype_cp  periodstart = iv_date periodend = iv_date )
+                          ( dcsid = iv_dcsid  keydate = iv_date periodtype = cl_tba_dcs_lof_services=>gc_periodtype_csp periodstart = iv_date periodend = iv_date )
+                          ( dcsid = iv_dcsid  keydate = iv_date periodtype = cl_tba_dcs_lof_services=>gc_periodtype_psp periodstart = iv_date periodend = iv_date )
+                          ( dcsid = iv_dcsid  keydate = iv_date periodtype = cl_tba_dcs_lof_services=>gc_periodtype_tp  periodstart = iv_date periodend = iv_date )
+                          ( dcsid = iv_dcsid  keydate = iv_date periodtype = cl_tba_dcs_lof_services=>gc_periodtype_qp  periodstart = iv_date periodend = iv_date ) ).
+
+  ENDMETHOD.
