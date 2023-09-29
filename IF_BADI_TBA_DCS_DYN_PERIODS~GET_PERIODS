@@ -1,0 +1,47 @@
+  METHOD if_badi_tba_dcs_dyn_periods~get_periods.
+
+    REFRESH: ct_periods.
+
+**Check if start date is entered
+    IF iv_date IS NOT INITIAL AND
+**Proceed only if the start date is a workday
+       cl_tba_periods_services=>is_workday( iv_date = iv_date                         " Current Date of Application Server
+                                            iv_factory_calendar_id = iv_calendar ).   " Factory Calendar
+      CASE iv_pdef_id.
+        WHEN 'ZIND'.  "Custom Period Definition ID
+
+**Begin Logic For Index Prices**
+          me->update_periods_index_prices(
+            EXPORTING
+              iv_dcsid   = iv_dcsid                " Derivative Contract Specification ID
+              iv_date    = iv_date                 " Field of type DATS
+            CHANGING
+              ct_periods = ct_periods ).           " DCS Periods
+
+        WHEN 'ZFWD'. "Custom Period Definition ID
+
+**Begin Logic For Forward Prices**
+          me->update_periods_forward_prices(
+            EXPORTING
+              iv_dcsid    = iv_dcsid                " Derivative Contract Specification ID
+              iv_date     = iv_date                 " Field of type DATS
+              iv_pdef_id  = iv_pdef_id              " Period Determination Method
+              iv_physcomm = iv_physcomm             " DCS Periods
+            CHANGING
+              ct_periods  = ct_periods ).           " DCS Periods
+
+        WHEN OTHERS.
+      ENDCASE.
+
+**Populate Keydate Text
+      IF ct_periods IS NOT INITIAL.
+        me->update_keydate_text(
+          exporting
+            it_periods       =   ct_periods               " DCS Periods
+          changing
+            ct_keydate_texts =  ct_keydate_texts          " Texts for Keydates
+                ).
+      ENDIF.
+    ENDIF.
+
+  ENDMETHOD.
